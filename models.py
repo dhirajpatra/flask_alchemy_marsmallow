@@ -47,6 +47,16 @@ class Product(db.Model):
         if len(name) < 5 or len(name) > 20:
             raise AssertionError('Product name must be more between 5 and 20 characters')
 
+    @validates('price')
+    def validate_product_price(self, key, price):
+        if price < 0 or price > 1000:
+            raise AssertionError('Price must be between 0 and 1000')
+
+    @validates('qty')
+    def validate_product_qty(self, key, qty):
+        if qty < 0 or qty > 100:
+            raise AssertionError('Qty must be between 0 and 100')
+
 
 # Category schema
 class CategorySchema(ma.ModelSchema):
