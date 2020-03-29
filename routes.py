@@ -1,7 +1,6 @@
 from flask import request, jsonify
-from app import app, db, ma
+from app import app, db
 from models import Category, Product, CategorySchema, ProductSchema
-import os
 
 
 # init schema
@@ -28,8 +27,9 @@ def add_product():
    description = request.json['description']
    price = request.json['price']
    qty = request.json['qty']
+   cat = request.json['category']
 
-   category = Category.query.get(1)
+   category = Category.query.filter_by(name=cat).first()
    category_id = category.id
    
    new_product = Product(name, description, price, qty, category_id)
