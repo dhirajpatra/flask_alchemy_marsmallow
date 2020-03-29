@@ -1,10 +1,22 @@
 from app import db, ma
+from sqlalchemy.orm import validates
 
 
 # category class and model
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False, index=True)
+
+    @validates('name')
+    def validate_category_name(self, key, name):
+        if not name:
+            raise AssertionError('No category name provided')
+
+        if Category.query.filter(Category.name == name):
+            raise AssertionError('Category name already used')
+
+        if len(name) < 5 or len(name) > 20:
+            raise AssertionError('Category name must be more between 5 and 20 characters')
     
 
 # product class and model
@@ -23,6 +35,17 @@ class Product(db.Model):
         self.price = price
         self.qty = qty
         self.category_id = category_id
+
+    @validates('name')
+    def validate_product_name(self, key, name):
+        if not name:
+            raise AssertionError('No product name provided')
+
+        if Product.query.filter(Product.name == name):
+            raise AssertionError('Product name already used')
+
+        if len(name) < 5 or len(name) > 20:
+            raise AssertionError('Product name must be more between 5 and 20 characters')
 
 
 # Category schema
